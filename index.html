@@ -63,6 +63,7 @@ label{display:block;font-weight:700;font-size:.88rem;margin:15px 0 7px}input,sel
 <div class="status" id="status">Tu resumen aparecerá aquí cuando pulses “Preparar mi pedido”.<div class="meter"><div id="bar"></div></div></div>
 <div class="lyrics" id="lyrics"></div>
 <button class="primary" id="copyBrief" type="button" style="display:none;background:linear-gradient(100deg,#4d356b,#8d4dc4)">Copiar resumen del pedido</button>
+<button class="primary" id="sendWhatsApp" type="button" style="display:none;background:#168b54">Enviar pedido por WhatsApp</button>
 <p class="fine" id="copyMessage" aria-live="polite"></p>
 <div class="note">La generación de audio y la compra estarán disponibles en una siguiente etapa.</div>
 </aside>
@@ -73,6 +74,8 @@ label{display:block;font-weight:700;font-size:.88rem;margin:15px 0 7px}input,sel
 const form = document.getElementById('songForm');
 const copyButton = document.getElementById('copyBrief');
 const copyMessage = document.getElementById('copyMessage');
+const whatsappButton = document.getElementById('sendWhatsApp');
+const whatsappNumber = '5214462365958';
 let currentBrief = '';
 
 form.addEventListener('submit', event => {
@@ -115,7 +118,15 @@ form.addEventListener('submit', event => {
   preview.style.display = 'block';
   preview.textContent = currentBrief;
   copyButton.style.display = 'block';
-  copyMessage.textContent = '';
+  whatsappButton.style.display = 'block';
+  copyMessage.textContent = 'Tu pedido está preparado. Al pulsar WhatsApp, revisa el mensaje y presiona Enviar para hacérnoslo llegar.';
+});
+
+whatsappButton.addEventListener('click', () => {
+  if (!currentBrief) return;
+  const message = currentBrief.replace('Estado: pedido de prueba; aún no se ha enviado ni producido la canción.', 'Estado: solicitud recibida por WhatsApp pendiente de confirmación; aún no se ha producido la canción.');
+  const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  window.open(url, '_blank', 'noopener,noreferrer');
 });
 
 copyButton.addEventListener('click', async () => {
