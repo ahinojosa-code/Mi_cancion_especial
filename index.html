@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#24143b">
-<title>Mi Canción Especial | Prototipo</title>
+<title>Mi Canción Especial | Tu historia, tu canción</title>
 <style>
 :root{--ink:#24143b;--muted:#6d6478;--pink:#f36b8b;--gold:#f3c969;--paper:#fffaf7;--card:#fff;--line:#eadfeb}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(160deg,#fff7f4,#f5efff 60%,#fffaf0);color:var(--ink)}
@@ -29,24 +29,30 @@ label{display:block;font-weight:700;font-size:.88rem;margin:15px 0 7px}input,sel
 <div class="layout">
 <section class="panel">
 <h2>Diseña tu canción</h2>
-<p class="sub">Entre más detalles nos compartas, más personal podrá ser la letra.</p>
+<p class="sub">Comparte los detalles que hacen única a esa persona. No necesitas escribir una canción: nosotros prepararemos el encargo.</p>
 <form id="songForm">
 <label for="recipient">¿Para quién es la canción?</label>
 <select id="recipient"><option>Mi pareja</option><option>Mi mamá</option><option>Mi papá</option><option>Mi hijo o hija</option><option>Un amigo o amiga</option><option>Otra persona</option></select>
 <div class="two">
 <div><label for="name">Nombre</label><input id="name" placeholder="Ej. Mariana" maxlength="60" required></div>
-<div><label for="occasion">Ocasión</label><select id="occasion"><option>Cumpleaños</option><option>Aniversario</option><option>Día de las Madres</option><option>Agradecimiento</option><option>Amor sin ocasión especial</option><option>Otra ocasión</option></select></div>
+<div><label for="occasion">Ocasión</label><select id="occasion"><option>Cumpleaños</option><option>Aniversario</option><option>Día de las Madres</option><option>Agradecimiento</option><option>Amor sin ocasión especial</option><option>Día del Padre</option><option>Boda</option><option>Homenaje o recuerdo</option><option>Declaración de amor</option><option>Otra ocasión</option></select></div>
 </div>
 <label for="story">¿Qué quieres contar o decir?</label>
-<textarea id="story" maxlength="900" placeholder="Ej. Nos conocimos en la universidad, hemos formado una familia y quiero agradecerle que siempre esté conmigo." required></textarea>
+<textarea id="story" maxlength="1200" placeholder="Ej. Nos conocimos en la universidad, hemos formado una familia y quiero agradecerle que siempre esté conmigo." required></textarea>
+<label for="details">Recuerdos y detalles que no pueden faltar (opcional)</label>
+<textarea id="details" maxlength="700" placeholder="Apodos, lugares importantes, anécdotas, nombres de familiares o frases que solo ustedes entienden."></textarea>
 <div class="two">
-<div><label for="genre">Estilo musical</label><select id="genre"><option>Mariachi romántico</option><option>Banda sinaloense</option><option>Norteño</option><option>Cumbia</option><option>Balada pop</option><option>Rock suave</option><option>Salsa</option><option>Regional mexicano</option></select></div>
-<div><label for="mood">Emoción</label><select id="mood"><option>Romántica</option><option>Alegre y festiva</option><option>Emotiva</option><option>Nostálgica</option><option>Divertida</option></select></div>
+<div><label for="genre">Estilo musical</label><select id="genre"><option>Mariachi romántico</option><option>Banda sinaloense</option><option>Norteño</option><option>Cumbia</option><option>Balada pop</option><option>Rock suave</option><option>Salsa</option><option>Regional mexicano</option><option>Ranchera</option><option>Pop latino</option><option>Reguetón romántico</option></select></div>
+<div><label for="mood">Emoción</label><select id="mood"><option>Romántica</option><option>Alegre y festiva</option><option>Emotiva</option><option>Nostálgica</option><option>Divertida</option><option>Inspiradora</option><option>De agradecimiento</option></select></div>
+</div>
+<div class="two">
+<div><label for="voice">Tipo de voz</label><select id="voice"><option>Masculina</option><option>Femenina</option><option>Dueto</option><option>Sin preferencia</option></select></div>
+<div><label for="length">Duración aproximada</label><select id="length"><option>2 minutos</option><option selected>3 minutos</option><option>4 minutos</option><option>Sin preferencia</option></select></div>
 </div>
 <label for="phrase">Frase que debe aparecer (opcional)</label>
 <input id="phrase" maxlength="180" placeholder="Ej. Siempre elegiría caminar contigo">
-<button class="primary" type="submit">Preparar mi idea musical ✨</button>
-<p class="fine">Este prototipo prepara una vista previa de tu encargo. Todavía no genera audio real ni procesa pagos; conectaremos el motor musical cuando validemos proveedor, licencia y costos.</p>
+<button class="primary" type="submit">Preparar mi pedido ✨</button>
+<p class="fine">Por ahora, esta página solo prepara el resumen en tu navegador. No envía ni guarda tus datos en un servidor, no genera audio real y no procesa pagos.</p>
 </form>
 </section>
 <aside class="preview">
@@ -54,30 +60,72 @@ label{display:block;font-weight:700;font-size:.88rem;margin:15px 0 7px}input,sel
 <h2>Tu canción empieza aquí</h2>
 <p>Completa los datos y prepara una propuesta personalizada. Esta vista previa te ayudará a revisar la idea antes de conectar la generación musical real.</p>
 <div class="cover"><span>♫</span></div>
-<div class="status" id="status">Tu resumen aparecerá aquí cuando pulses “Preparar mi idea musical”.<div class="meter"><div id="bar"></div></div></div>
+<div class="status" id="status">Tu resumen aparecerá aquí cuando pulses “Preparar mi pedido”.<div class="meter"><div id="bar"></div></div></div>
 <div class="lyrics" id="lyrics"></div>
+<button class="primary" id="copyBrief" type="button" style="display:none;background:linear-gradient(100deg,#4d356b,#8d4dc4)">Copiar resumen del pedido</button>
+<p class="fine" id="copyMessage" aria-live="polite"></p>
 <div class="note">La generación de audio y la compra estarán disponibles en una siguiente etapa.</div>
 </aside>
 </div>
 <div class="foot">Mi Canción Especial · Prototipo de concepto · No se realizan cobros</div>
 </main>
 <script>
-const form=document.getElementById('songForm');
-form.addEventListener('submit',e=>{
- e.preventDefault();
- const name=document.getElementById('name').value.trim();
- const story=document.getElementById('story').value.trim();
- if(!name||!story){return}
- const recipient=document.getElementById('recipient').value;
- const occasion=document.getElementById('occasion').value;
- const genre=document.getElementById('genre').value;
- const mood=document.getElementById('mood').value;
- const phrase=document.getElementById('phrase').value.trim();
- const status=document.getElementById('status'), bar=document.getElementById('bar'), lyrics=document.getElementById('lyrics');
- status.firstChild.textContent=`Idea preparada para ${name} · ${occasion} · ${genre} · ${mood}.`;
- bar.style.width='100%';
- lyrics.style.display='block';
- lyrics.textContent=`BRIEF DE TU CANCIÓN\\n\\nPara: ${name} (${recipient})\\nOcasión: ${occasion}\\nEstilo: ${genre}\\nEmoción: ${mood}\\n\\nHistoria para convertir en letra:\\n${story}${phrase?'\\n\\nFrase obligatoria:\\n“'+phrase+'”':''}\\n\\nSiguiente paso: conectar un modelo de lenguaje para escribir la letra y una API musical con permiso comercial para generar el audio.`;
+const form = document.getElementById('songForm');
+const copyButton = document.getElementById('copyBrief');
+const copyMessage = document.getElementById('copyMessage');
+let currentBrief = '';
+
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  const get = id => document.getElementById(id).value.trim();
+  const name = get('name');
+  const story = get('story');
+  if (!name || !story) return;
+
+  const recipient = get('recipient');
+  const occasion = get('occasion');
+  const genre = get('genre');
+  const mood = get('mood');
+  const voice = get('voice');
+  const length = get('length');
+  const details = get('details');
+  const phrase = get('phrase');
+
+  const lines = [
+    'PEDIDO — MI CANCIÓN ESPECIAL',
+    '',
+    `Nombre de la persona: ${name}`,
+    `Relación con quien regala: ${recipient}`,
+    `Ocasión: ${occasion}`,
+    `Estilo musical: ${genre}`,
+    `Emoción: ${mood}`,
+    `Tipo de voz: ${voice}`,
+    `Duración aproximada: ${length}`,
+    '',
+    'Historia y mensaje:', story
+  ];
+  if (details) lines.push('', 'Recuerdos y detalles importantes:', details);
+  if (phrase) lines.push('', 'Frase que debe aparecer:', `“${phrase}”`);
+  lines.push('', 'Estado: pedido de prueba; aún no se ha enviado ni producido la canción.');
+  currentBrief = lines.join('\n');
+
+  document.getElementById('status').firstChild.textContent = `Resumen preparado para ${name} · ${occasion} · ${genre}.`;
+  document.getElementById('bar').style.width = '100%';
+  const preview = document.getElementById('lyrics');
+  preview.style.display = 'block';
+  preview.textContent = currentBrief;
+  copyButton.style.display = 'block';
+  copyMessage.textContent = '';
+});
+
+copyButton.addEventListener('click', async () => {
+  if (!currentBrief) return;
+  try {
+    await navigator.clipboard.writeText(currentBrief);
+    copyMessage.textContent = 'Resumen copiado. Puedes pegarlo en un documento o mensaje.';
+  } catch {
+    copyMessage.textContent = 'No se pudo copiar automáticamente. Selecciona el resumen y cópialo manualmente.';
+  }
 });
 </script>
 </body>
