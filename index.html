@@ -52,7 +52,7 @@ label{display:block;font-weight:700;font-size:.88rem;margin:15px 0 7px}input,sel
 <label for="phrase">Frase que debe aparecer (opcional)</label>
 <input id="phrase" maxlength="180" placeholder="Ej. Siempre elegiría caminar contigo">
 <button class="primary" type="submit">Preparar mi pedido ✨</button>
-<p class="fine">Por ahora, esta página solo prepara el resumen en tu navegador. No envía ni guarda tus datos en un servidor, no genera audio real y no procesa pagos.</p>
+<p class="fine">El formulario enviará los datos a Mi Canción Especial para registrar tu pedido como pendiente de pago. Todavía no genera audio ni procesa pagos. Usa datos de prueba mientras terminamos las protecciones y el aviso de privacidad.</p>
 </form>
 </section>
 <aside class="preview">
@@ -68,17 +68,20 @@ label{display:block;font-weight:700;font-size:.88rem;margin:15px 0 7px}input,sel
 <div class="note">La generación de audio y la compra estarán disponibles en una siguiente etapa.</div>
 </aside>
 </div>
-<div class="foot">Mi Canción Especial · Prototipo de concepto · No se realizan cobros</div>
+<div class="foot">Mi Canción Especial · Registro de pedidos en prueba · No se realizan cobros ni se genera audio</div>
 </main>
 <script>
 const form = document.getElementById('songForm');
 const copyButton = document.getElementById('copyBrief');
 const copyMessage = document.getElementById('copyMessage');
 const whatsappButton = document.getElementById('sendWhatsApp');
+const submitButton = form.querySelector('button[type="submit"]');
 const whatsappNumber = '5214462365958';
+const apiUrl = 'https://mi-cancion-api.aahinojosa.workers.dev/api/orders';
 let currentBrief = '';
+let currentOrderId = '';
 
-form.addEventListener('submit', event => {
+form.addEventListener('submit', async event => {
   event.preventDefault();
   const get = id => document.getElementById(id).value.trim();
   const name = get('name');
@@ -109,22 +112,63 @@ form.addEventListener('submit', event => {
   ];
   if (details) lines.push('', 'Recuerdos y detalles importantes:', details);
   if (phrase) lines.push('', 'Frase que debe aparecer:', `“${phrase}”`);
-  lines.push('', 'Estado: pedido de prueba; aún no se ha enviado ni producido la canción.');
-  currentBrief = lines.join('\n');
 
-  document.getElementById('status').firstChild.textContent = `Resumen preparado para ${name} · ${occasion} · ${genre}.`;
-  document.getElementById('bar').style.width = '100%';
-  const preview = document.getElementById('lyrics');
-  preview.style.display = 'block';
-  preview.textContent = currentBrief;
-  copyButton.style.display = 'block';
-  whatsappButton.style.display = 'block';
-  copyMessage.textContent = 'Tu pedido está preparado. Al pulsar WhatsApp, revisa el mensaje y presiona Enviar para hacérnoslo llegar.';
+  currentOrderId = '';
+  currentBrief = lines.join('\n');
+  submitButton.disabled = true;
+  submitButton.textContent = 'Registrando pedido…';
+  copyButton.style.display = 'none';
+  whatsappButton.style.display = 'none';
+  copyMessage.textContent = 'Enviando tu pedido de prueba al servidor seguro…';
+  document.getElementById('status').firstChild.textContent = 'Estamos registrando tu pedido. No cierres esta página todavía.';
+  document.getElementById('bar').style.width = '40%';
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name, recipient, occasion, story, genre, mood,
+        phrase, details, voice, length
+      })
+    });
+
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result.ok || !result.id) {
+      throw new Error(result.error || `El servidor respondió con estado ${response.status}`);
+    }
+
+    currentOrderId = result.id;
+    currentBrief += `\n\nNúmero de pedido: ${currentOrderId}\nEstado: registrado; pendiente de pago. La canción aún no se ha producido.`;
+    document.getElementById('status').firstChild.textContent = `Pedido registrado: ${currentOrderId}. Estado: pendiente de pago.`;
+    document.getElementById('bar').style.width = '100%';
+    const preview = document.getElementById('lyrics');
+    preview.style.display = 'block';
+    preview.textContent = currentBrief;
+    copyButton.style.display = 'block';
+    whatsappButton.style.display = 'block';
+    copyMessage.textContent = 'Pedido guardado. Puedes enviarte también el resumen por WhatsApp; tendrás que pulsar Enviar dentro de WhatsApp.';
+  } catch (error) {
+    currentBrief += '\n\nEstado: no se pudo confirmar el registro automático. No compartas datos de prueba sensibles.';
+    document.getElementById('status').firstChild.textContent = 'No pudimos confirmar el registro automático.';
+    document.getElementById('bar').style.width = '0%';
+    const preview = document.getElementById('lyrics');
+    preview.style.display = 'block';
+    preview.textContent = currentBrief;
+    copyButton.style.display = 'block';
+    whatsappButton.style.display = 'block';
+    copyMessage.textContent = `El pedido no quedó confirmado por el sistema (${error.message}). Puedes copiar el resumen o intentar WhatsApp como alternativa, pero no hagas un pago todavía.`;
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = 'Preparar mi pedido ✨';
+  }
 });
 
 whatsappButton.addEventListener('click', () => {
   if (!currentBrief) return;
-  const message = currentBrief.replace('Estado: pedido de prueba; aún no se ha enviado ni producido la canción.', 'Estado: solicitud recibida por WhatsApp pendiente de confirmación; aún no se ha producido la canción.');
+  const message = currentOrderId
+    ? currentBrief + '\n\nEste mensaje se envía como referencia del pedido; la canción no se ha generado y el pago no está confirmado.'
+    : currentBrief + '\n\nEste pedido no fue confirmado en el registro web; por favor verifica su recepción antes de realizar cualquier pago.';
   const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
   window.open(url, '_blank', 'noopener,noreferrer');
 });
