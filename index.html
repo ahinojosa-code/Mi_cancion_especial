@@ -13,7 +13,7 @@ header{padding:20px 18px;display:flex;align-items:center;justify-content:space-b
 main{max-width:1050px;margin:12px auto 50px;padding:0 16px}.hero{text-align:center;padding:32px 8px 26px}.eyebrow{text-transform:uppercase;letter-spacing:2px;font-size:.72rem;font-weight:800;color:#b3446a}.hero h1{font-size:clamp(2rem,7vw,4rem);line-height:1.02;letter-spacing:-1.8px;margin:12px auto;max-width:800px}.hero h1 em{font-style:normal;color:#d64e79}.hero p{color:var(--muted);max-width:620px;margin:14px auto;line-height:1.6}
 .layout{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;align-items:start}.panel{background:#ffffffd9;border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 16px 45px #39204d0c}.panel h2{margin:0 0 6px;font-size:1.25rem}.sub{color:var(--muted);font-size:.9rem;line-height:1.5;margin:0 0 20px}
 label{display:block;font-weight:700;font-size:.88rem;margin:15px 0 7px}input,select,textarea{width:100%;border:1px solid #ddd1e2;border-radius:12px;background:white;padding:12px 13px;font:inherit;color:var(--ink);outline:none}input:focus,select:focus,textarea:focus{border-color:var(--pink);box-shadow:0 0 0 3px #f36b8b20}textarea{min-height:100px;resize:vertical}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.primary{width:100%;border:0;border-radius:13px;background:linear-gradient(100deg,#d94e7b,#8d4dc4);color:white;padding:14px 16px;font-weight:800;font-size:1rem;margin-top:20px;cursor:pointer;box-shadow:0 8px 18px #a64c8a28}.primary:active{transform:translateY(1px)}.fine{font-size:.76rem;color:var(--muted);line-height:1.5;margin:12px 0 0}
-.preview{position:sticky;top:14px;overflow:hidden;background:linear-gradient(145deg,#2b1746,#6e326f 65%,#bd557d);color:white;border-radius:22px;padding:24px;min-height:510px}.spark{font-size:1.6rem}.preview h2{font-size:1.5rem;margin:8px 0}.preview p{color:#f2e5f7;line-height:1.55}.cover{margin:24px auto 20px;width:175px;height:175px;border-radius:50%;border:1px solid #ffffff55;background:radial-gradient(circle at 35% 25%,#f9d78a,#ed8ca0 40%,#5e347a 72%);display:grid;place-items:center;box-shadow:0 0 0 12px #ffffff0b,0 0 0 25px #ffffff08}.cover span{font-size:3.1rem}.status{border:1px solid #ffffff40;background:#ffffff12;border-radius:13px;padding:13px;font-size:.86rem;line-height:1.5}.meter{height:5px;background:#ffffff2c;border-radius:99px;margin-top:12px;overflow:hidden}.meter div{height:100%;width:0;background:var(--gold);transition:width .5s}.lyrics{display:none;background:#ffffff12;border-radius:12px;padding:13px;margin-top:12px;white-space:pre-line;line-height:1.6;font-size:.9rem}.foot{text-align:center;color:var(--muted);font-size:.78rem;padding:20px 10px}.note{font-size:.8rem;color:#fce4b3;margin-top:12px}
+.preview{position:sticky;top:14px;overflow:hidden;background:linear-gradient(145deg,#2b1746,#6e326f 65%,#bd557d);color:white;border-radius:22px;padding:24px;min-height:510px}.spark{font-size:1.6rem}.preview h2{font-size:1.5rem;margin:8px 0}.preview p{color:#f2e5f7;line-height:1.55}.cover{margin:24px auto 20px;width:175px;height:175px;border-radius:50%;border:1px solid #ffffff55;background:radial-gradient(circle at 35% 25%,#f9d78a,#ed8ca0 40%,#5e347a 72%);display:grid;place-items:center;box-shadow:0 0 0 12px #ffffff0b,0 0 0 25px #ffffff08}.cover span{font-size:3.1rem}.status{border:1px solid #ffffff40;background:#ffffff12;border-radius:13px;padding:13px;font-size:.86rem;line-height:1.5}.meter{height:5px;background:#ffffff2c;border-radius:99px;margin-top:12px;overflow:hidden}.meter div{height:100%;width:0;background:var(--gold);transition:width .5s}.lyrics{display:none;background:#ffffff12;border-radius:12px;padding:13px;margin-top:12px;white-space:pre-line;line-height:1.6;font-size:.9rem}.foot{text-align:center;color:var(--muted);font-size:.78rem;padding:20px 10px}.note{font-size:.8rem;color:#fce4b3;margin-top:12px}.security-check{margin-top:16px;padding:12px;border:1px solid var(--line);border-radius:13px;background:#fffdfd}.security-check label{margin-top:0}.security-message{font-size:.78rem;color:var(--muted);margin:8px 0 0;line-height:1.4}
 @media(max-width:760px){.layout{grid-template-columns:1fr}.preview{position:static;min-height:0}.hero{padding-top:20px}.panel{padding:18px}.two{grid-template-columns:1fr 1fr}}
 @media(max-width:380px){.two{grid-template-columns:1fr}.badge{display:none}}
 </style>
@@ -51,8 +51,13 @@ label{display:block;font-weight:700;font-size:.88rem;margin:15px 0 7px}input,sel
 </div>
 <label for="phrase">Frase que debe aparecer (opcional)</label>
 <input id="phrase" maxlength="180" placeholder="Ej. Siempre elegiría caminar contigo">
+<div class="security-check">
+<label>Verificación de seguridad</label>
+<div id="turnstile-container"></div>
+<p id="turnstileMessage" class="security-message" aria-live="polite">Completa la verificación para registrar tu pedido.</p>
+</div>
 <button class="primary" type="submit">Preparar mi pedido ✨</button>
-<p class="fine">El formulario enviará los datos a Mi Canción Especial para registrar tu pedido como pendiente de pago. Todavía no genera audio ni procesa pagos. Usa datos de prueba mientras terminamos las protecciones y el aviso de privacidad.</p>
+<p class="fine">La verificación de seguridad ayuda a reducir envíos automáticos. El formulario enviará los datos a Mi Canción Especial para registrar tu pedido como pendiente de pago. Todavía no genera audio ni procesa pagos. Usa datos de prueba mientras terminamos las protecciones y el aviso de privacidad.</p>
 </form>
 </section>
 <aside class="preview">
@@ -70,6 +75,37 @@ label{display:block;font-weight:700;font-size:.88rem;margin:15px 0 7px}input,sel
 </div>
 <div class="foot">Mi Canción Especial · Registro de pedidos en prueba · No se realizan cobros ni se genera audio</div>
 </main>
+<script>
+window.turnstileToken = "";
+window.turnstileWidgetId = null;
+window.onTurnstileSuccess = function(token) {
+  window.turnstileToken = token;
+  const message = document.getElementById("turnstileMessage");
+  if (message) message.textContent = "Verificación completada. Ya puedes registrar el pedido.";
+};
+window.onTurnstileExpired = function() {
+  window.turnstileToken = "";
+  const message = document.getElementById("turnstileMessage");
+  if (message) message.textContent = "La verificación caducó. Complétala de nuevo.";
+};
+window.onTurnstileError = function() {
+  window.turnstileToken = "";
+  const message = document.getElementById("turnstileMessage");
+  if (message) message.textContent = "No se pudo cargar la verificación. Recarga la página e inténtalo de nuevo.";
+};
+window.onTurnstileLoad = function() {
+  const container = document.getElementById("turnstile-container");
+  if (!container || !window.turnstile || window.turnstileWidgetId !== null) return;
+  window.turnstileWidgetId = window.turnstile.render(container, {
+    sitekey: "0x4AAAAAAFhPJ-yiQ3lCWXMT",
+    action: "submit_order",
+    callback: window.onTurnstileSuccess,
+    "expired-callback": window.onTurnstileExpired,
+    "error-callback": window.onTurnstileError
+  });
+};
+</script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onTurnstileLoad&render=explicit" async defer></script>
 <script>
 const form = document.getElementById('songForm');
 const copyButton = document.getElementById('copyBrief');
@@ -96,6 +132,14 @@ form.addEventListener('submit', async event => {
   const length = get('length');
   const details = get('details');
   const phrase = get('phrase');
+  const turnstileToken = window.turnstileToken;
+
+  if (!turnstileToken) {
+    copyMessage.textContent = 'Completa la verificación de seguridad antes de registrar el pedido.';
+    const securityBox = document.getElementById('turnstile-container');
+    if (securityBox) securityBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
 
   const lines = [
     'PEDIDO — MI CANCIÓN ESPECIAL',
@@ -129,7 +173,7 @@ form.addEventListener('submit', async event => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name, recipient, occasion, story, genre, mood,
-        phrase, details, voice, length
+        phrase, details, voice, length, turnstileToken
       })
     });
 
@@ -159,6 +203,13 @@ form.addEventListener('submit', async event => {
     whatsappButton.style.display = 'block';
     copyMessage.textContent = `El pedido no quedó confirmado por el sistema (${error.message}). Puedes copiar el resumen o intentar WhatsApp como alternativa, pero no hagas un pago todavía.`;
   } finally {
+    // Turnstile tokens are one-use; prepare a fresh challenge for the next attempt.
+    window.turnstileToken = '';
+    if (window.turnstile && window.turnstileWidgetId !== null) {
+      window.turnstile.reset(window.turnstileWidgetId);
+    }
+    const securityMessage = document.getElementById('turnstileMessage');
+    if (securityMessage) securityMessage.textContent = 'Completa la verificación para registrar otro pedido.';
     submitButton.disabled = false;
     submitButton.textContent = 'Preparar mi pedido ✨';
   }
